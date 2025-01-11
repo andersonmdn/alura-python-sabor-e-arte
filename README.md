@@ -1,76 +1,96 @@
-# Gerenciamento de Restaurantes 🎉
+# 🍴 Sistema de Gerenciamento de Restaurantes
 
-Este projeto é uma aplicação simples de console desenvolvida em Python que permite o gerenciamento de restaurantes, com funcionalidades para cadastrar, listar e ativar/desativar restaurantes. Ele utiliza o pacote `Rich` para exibir saídas estilizadas no terminal. 🎨✨✅
+Um sistema simples e interativo para gerenciar restaurantes, desenvolvido em Python com o pacote [Rich](https://rich.readthedocs.io/en/stable/) para estilização de console.
 
-## Funcionalidades 🍽️
+---
 
-- **Cadastrar Restaurante**: Permite adicionar novos restaurantes com um nome e uma categoria escolhida de uma lista predefinida.
-- **Listar Restaurantes**: Exibe uma tabela com o nome, categoria e status (ativo/inativo) de todos os restaurantes cadastrados.
-- **Ativar/Desativar Restaurante**: Permite alternar o status de um restaurante cadastrado.
-- **Sair**: Finaliza o programa.
+## 📚 Sobre o Projeto
 
-## Requisitos 📦
+Este projeto foi desenvolvido durante dois cursos de Python realizados na plataforma [Alura](https://www.alura.com.br). Mesmo sem ser solicitado, realizei a junção dos dois projetos apresentados nos cursos, incorporando melhorias e novas funcionalidades para torná-lo mais robusto e funcional.
 
-- Python 3.7 ou superior
-- Biblioteca `Rich`
+---
 
-### Instalação do Rich 📥
+## 📋 Funcionalidades
 
-Para instalar o pacote `Rich`, execute o seguinte comando:
+- ✅ **Cadastrar Restaurantes:** Adicione novos restaurantes com nome e categoria.
+- 📋 **Listar Restaurantes:** Exiba todos os restaurantes cadastrados em uma tabela estilizada.
+- 🔄 **Ativar/Desativar Restaurantes:** Altere o status de um restaurante (ativo/inativo).
+- ⭐ **Receber Avaliações:** Registre avaliações feitas por clientes e calcule a média automaticamente.
+- ➕ **Incluir Exemplos:** Adicione exemplos pré-definidos de restaurantes com avaliações.
+- ❌ **Encerrar Programa:** Finalize a execução do sistema de forma segura.
 
-```bash
-pip install rich
+---
+
+## 🛠️ Como Usar
+1. **Instale as dependências**:
+   Certifique-se de ter o Python instalado e, em seguida, instale o Rich:
+   ```bash
+   pip install rich
+   ```
+
+2. **Execute o programa**:
+   ```bash
+   python app.py
+   ```
+
+---
+
+## 📂 Estrutura do Projeto
+
+```plaintext
+.
+├── app.py              # Arquivo principal que executa o sistema
+├── modelos/
+│   ├── avalaicao.py     # Classe Avaliação
+│   └── restaurante.py   # Classe Restaurante
+├── README.md            # Documentação do projeto
 ```
 
-## Como executar o projeto ▶️
+---
 
-1. Clone este repositório ou copie os arquivos para o seu ambiente local.
-2. Certifique-se de ter o Python e o pacote `Rich` instalados.
-3. Execute o script principal com o seguinte comando:
+## 🖥️ Demonstração
 
-```bash
-python app.py
-```
+![Menu](./img/menu.png)
 
-Substitua `app.py` pelo nome do arquivo Python que contém o código.
+![Listagem](./img/listagem.png)
 
-## Estrutura do Projeto 📁
+---
 
-O projeto consiste em um único arquivo Python com as seguintes funções principais:
+## 📝 Funcionalidades Explicadas
 
-- `limpar_tela`: Limpa o console de acordo com o sistema operacional.
-- `exibir_titulo`: Exibe o título estilizado no console.
-- `exibir_menu`: Mostra o menu principal.
-- `finalizar_programa`: Encerra o programa com uma mensagem.
-- `opcao_invalida`: Informa o usuário sobre uma opção inválida.
-- `cadastrar_restaurante`: Permite cadastrar um novo restaurante.
-- `listar_restaurantes`: Lista todos os restaurantes cadastrados.
-- `alternar_status_restaurante`: Altera o status de um restaurante para ativo ou inativo.
-- `escolher_opcao`: Gerencia a navegação no menu com base na escolha do usuário.
-- `main`: Loop principal do programa.
+### Cadastrar Restaurante ➕
+Permite adicionar novos restaurantes, selecionando uma categoria a partir de uma lista de opções predefinidas.
 
-## Exemplo de Uso 🖥️
+### Listar Restaurantes 📋
+Exibe todos os restaurantes cadastrados com informações de:
+- Nome
+- Categoria
+- Avaliação média (exibida como estrelas ⭐)
+- Status (Ativo ou Inativo)
 
-Ao executar o programa, será exibido o seguinte menu:
+### Ativar/Desativar Restaurante 🔄
+Ativa ou desativa o status de um restaurante, permitindo o controle do funcionamento.
 
-```
-[1] Cadastrar restaurante
-[2] Listar restaurantes
-[3] Ativar/Desativar restaurante
-[4] Sair
-```
+### Receber Avaliação ⭐
+Adiciona uma avaliação de um cliente a um restaurante, atualizando automaticamente a média de avaliações.
 
-- Escolha uma opção digitando o número correspondente.
-- Siga as instruções exibidas no console para completar a ação escolhida.
-- Para sair, escolha a opção `[4] Sair`.
+### Incluir Exemplos ➕
+Adiciona uma lista de restaurantes de exemplo com avaliações para facilitar os testes.
 
-## Personalização ⚙️
+---
 
-Você pode personalizar a lista de categorias de restaurantes alterando a variável `categorias_restaurantes` no início do código.
+## 🚀 Tecnologias Utilizadas
 
-## Melhorias Futuras 🔮
+- **Python** 🐍
+- **Rich** 🎨 para estilização de console
+- **Estruturas de dados** para gerenciamento eficiente dos restaurantes e avaliações
 
-- Adicionar persistência dos dados (ex.: salvar e carregar restaurantes de um arquivo).
-- Permitir edição de informações de restaurantes.
-- Criar filtros para listar restaurantes por categoria ou status.
+---
 
+## ✨ Melhorias Realizadas
+
+- Integração dos projetos dos dois cursos em um único sistema completo e funcional.
+- Implementação de tabelas estilizadas e melhor organização da saída no console utilizando o pacote `Rich`.
+- Adição de funcionalidades como **incluir exemplos** para facilitar a experiência do usuário.
+
+---

@@ -5,6 +5,8 @@ from rich.text import Text
 from rich.prompt import IntPrompt, Prompt
 from rich.table import Table
 
+from modelos.restaurante import Restaurante
+
 console = Console()
 
 categorias_restaurantes = [
@@ -25,11 +27,11 @@ categorias_restaurantes = [
     "Bar e Petiscos"
 ]
 
-restaurantes = [
-    {"nome": "Burger King", "categoria": "Fast Food", "ativo": True},
-    {"nome": "Doguinho da Tia", "categoria": "Comida Brasileira", "ativo": False},
-    {"nome": "Pizzaria Vale a Pena", "categoria": "Pizzaria", "ativo": False},
-]
+# restaurantes = [
+#     {"nome": "Burger King", "categoria": "Fast Food", "ativo": True},
+#     {"nome": "Doguinho da Tia", "categoria": "Comida Brasileira", "ativo": False},
+#     {"nome": "Pizzaria Vale a Pena", "categoria": "Pizzaria", "ativo": False},
+# ]
 
 def limpar_tela():
     """
@@ -67,7 +69,9 @@ def exibir_menu():
     [1] Cadastrar restaurante
     [2] Listar restaurantes
     [3] Ativar/Desativar restaurante
-    [4] Sair
+    [4] Receber avaliação
+    [5] Incluir Exemplos
+    [6] Sair
     """
     console.print(menu)
 
@@ -114,7 +118,8 @@ def cadastrar_restaurante():
     escolha = int(Prompt.ask("\nDigite o número da categoria desejada"))
     categoria_escolhida = categorias_restaurantes[escolha - 1]
 
-    restaurantes.append({"nome": nome, "categoria": categoria_escolhida, "ativo": False})
+    # restaurantes.append({"nome": nome, "categoria": categoria_escolhida, "ativo": False})
+    Restaurante(nome, categoria_escolhida)
     
     console.print(f"[bold]Restaurante [green]'{nome}'[/green] da categoria [green]'{categoria_escolhida}'[/green] foi criado com sucesso![/bold]")
     Prompt.ask("Pressione [bold yellow]Enter[/bold yellow] para voltar ao menu")
@@ -133,13 +138,17 @@ def listar_restaurantes():
     table = Table(show_header=True, show_lines=True)
     table.add_column("Nome")
     table.add_column("Categoria")
+    table.add_column("Avaliação")
     table.add_column("Status")
         
-    for restaurante in restaurantes:
-        nome = restaurante["nome"]
-        categoria = restaurante["categoria"]
-        ativo = "[green]Ativo[/green]" if restaurante["ativo"] else "[red]Inativo[/red]"
-        table.add_row(nome, categoria, ativo)
+    for restaurante in Restaurante.restaurantes:
+        nome = restaurante.nome
+        categoria = restaurante.categoria
+        media = restaurante.media_avaliacoes
+        ativo = f"[green]{restaurante.ativo}[/green]" if restaurante.ativo == "Ativo" else f"[red]{restaurante.ativo}[/red]"
+        
+        nota_str = "⭐" * int(media) + f" ({media})" if media != "Sem avaliações" else "Sem avaliações"
+        table.add_row(nome, categoria, f"{nota_str}",ativo)
 
     console.print(table)
 
@@ -160,10 +169,10 @@ def alternar_status_restaurante():
     console.print("[bold]Ativar/Desativar restaurante[/bold]")
     
     nome = Prompt.ask("[bold]Digite o nome do restaurante que deseja ativar/desativar[/bold]")
-    for restaurante in restaurantes:
-        if restaurante["nome"].lower() == nome.lower():
-            restaurante["ativo"] = not restaurante["ativo"]
-            status = "[green]ativado[/green]" if restaurante["ativo"] else "[red]desativado[/red]"
+    for restaurante in Restaurante.restaurantes:
+        if restaurante.nome.lower() == nome.lower():
+            restaurante.alternar_status()
+            status = f"[green]Ativado[/green]" if restaurante.ativo == "Ativo" else f"[red]Desativado[/red]"
             console.print(f"[bold]Restaurante '{nome}' foi {status} com sucesso![/bold]")
             break
     else:
@@ -171,6 +180,80 @@ def alternar_status_restaurante():
     
     Prompt.ask("Pressione [bold yellow]Enter[/bold yellow] para voltar ao menu")
         
+def receber_avaliacao():
+    """
+    Recebe uma avaliação para um restaurante.
+
+    Input:
+        - Nome do restaurante (str).
+        - Nome do cliente (str).
+        - Nota da avaliação (float).
+
+    Output:
+        - Avaliação adicionada ao restaurante.
+        - Mensagem de sucesso ou erro exibida no console.
+    """
+    limpar_tela()
+    console.print("[bold]Receber avaliação[/bold]")
+    
+    nome_restaurante = Prompt.ask("[bold]Digite o nome do restaurante que deseja avaliar[/bold]")
+    nome_cliente = Prompt.ask("[bold]Digite o nome do cliente que esta avaliando[/bold]")
+    nota = float(Prompt.ask("[bold]Digite a nota da avaliação (de 0 a 5)[/bold]"))
+    
+    for restaurante in Restaurante.restaurantes:
+        if restaurante.nome.lower() == nome_restaurante.lower():
+            restaurante.receber_avaliacao(nome_cliente, nota)
+            
+            # Vamos criar a string corretamente com o caractere '⭐' multiplicado por 'nota'
+            nota_str = "⭐" * int(nota)
+            console.print(f"[bold]Avaliação de [green]{nota_str}[/green] recebida com sucesso para o restaurante '{nome_restaurante}'![/bold]")
+
+            break
+    else:
+        console.print(f"[bold red]Restaurante '{nome_restaurante}' não encontrado![/bold red]")
+    
+    Prompt.ask("Pressione [bold yellow]Enter[/bold yellow] para voltar ao menu")
+
+def incluir_exemplos():
+    """
+    Inclui exemplos de restaurantes à lista global `restaurantes`.
+
+    Input: Nenhum.
+    Output: Restaurantes adicionados à lista global `restaurantes
+    """
+    
+    restaurante = Restaurante("Burger King", "Fast Food")
+    restaurante.receber_avaliacao("João", 4)
+    restaurante.receber_avaliacao("Maria", 5)
+    restaurante.receber_avaliacao("José", 3)
+    restaurante.receber_avaliacao("Ana", 2)
+    
+    restaurante = Restaurante("Dogão da Tia", "Comida Brasileira")
+    restaurante.receber_avaliacao("João", 5)
+    restaurante.receber_avaliacao("Maria", 4)
+    restaurante.receber_avaliacao("José", 3)
+    restaurante.receber_avaliacao("Ana", 2)
+    restaurante.receber_avaliacao("Pedro", 1)
+    
+    restaurante = Restaurante("MC Donalds", "Fast Food")
+    restaurante.receber_avaliacao("João", 5)
+    restaurante.receber_avaliacao("Maria", 4)
+    restaurante.receber_avaliacao("José", 3)
+    
+    restaurante = Restaurante("Pizzaria do Zé", "Pizzaria")
+    restaurante.receber_avaliacao("João", 5)
+    restaurante.receber_avaliacao("Maria", 4)
+    restaurante.receber_avaliacao("José", 3)
+    
+    restaurante = Restaurante("Churrascaria do Gaúcho", "Churrascaria")
+    restaurante.receber_avaliacao("João", 5)
+    restaurante.receber_avaliacao("Maria", 4)
+    restaurante.receber_avaliacao("José", 3)
+    restaurante.receber_avaliacao("Ana", 2)
+    restaurante.receber_avaliacao("Pedro", 1)
+    restaurante.receber_avaliacao("Carlos", 5)
+    restaurante.receber_avaliacao("Mariana", 4)
+
 def escolher_opcao():
     """
     Gerencia a navegação no menu principal com base na escolha do usuário.
@@ -193,6 +276,10 @@ def escolher_opcao():
         elif opcao_escolhida == 3:
             alternar_status_restaurante()
         elif opcao_escolhida == 4:
+            receber_avaliacao()
+        elif opcao_escolhida == 5:
+            incluir_exemplos()
+        elif opcao_escolhida == 6:
             finalizar_programa()
             return False
         else:
