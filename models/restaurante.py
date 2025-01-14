@@ -1,5 +1,6 @@
 
-from modelos.avaliacao import Avaliacao
+from models.avaliacao import Avaliacao
+from models.item_cardapio import ItemCardapio
 
 class Restaurante:
     """ Classe que representa um restaurante. """
@@ -19,6 +20,7 @@ class Restaurante:
         self._categoria = categoria
         self._ativo = False
         self._avaliacao = []
+        self._cardapio = []
         
         Restaurante.restaurantes.append(self)
 
@@ -78,3 +80,18 @@ class Restaurante:
     def categoria(self):
         """Retorna um texto indicando a categoria do restaurante."""
         return self._categoria
+    
+    def adicionar_item_cardapio(self, item):
+        """Adiciona um prato ao cardápio do restaurante."""
+        if isinstance(item, ItemCardapio):
+            self._cardapio.append(item)
+            
+    def lista_cardapio(self):
+        """Exibe uma lista formatada dos pratos do cardápio."""
+        print(f"{'Nome'.ljust(25)} | {'Preço'.ljust(25)} | {'Descrição'.ljust(25)} | Ativo")
+        
+        for i, item in enumerate(self._cardapio):
+            preco = "R$ " + str(item._preco)
+            descricao = item.descricao if hasattr(item, "descricao") else ""
+            print(f"[{i}] - {item._nome.ljust(25)} | {preco.ljust(25)} | {descricao.ljust(25)} | {item._ativo}")
+            

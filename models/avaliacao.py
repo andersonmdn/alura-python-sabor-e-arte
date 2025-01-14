@@ -15,3 +15,13 @@ class Avaliacao:
     def __str__(self):
         """Retorna uma representação em string da avaliação."""
         return f'{self.nome} - {self.nota}'
+    
+    @property
+    def cliente(self):
+        """Retorna o nome do cliente que fez a avaliação."""
+        return self._cliente
+    
+    @property
+    def nota(self):
+        """Retorna a nota atribuída ao restaurante."""
+        return self._nota

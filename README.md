@@ -94,3 +94,12 @@ Adiciona uma lista de restaurantes de exemplo com avaliações para facilitar os
 - Adição de funcionalidades como **incluir exemplos** para facilitar a experiência do usuário.
 
 ---
+
+
+.\venv\Scripts\activate.bat
+
+uvicorn main:app
+
+http://127.0.0.1:8000/docs
+
+pip freeze > requirements.txt
