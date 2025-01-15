@@ -10,18 +10,14 @@ from rich.table import Table
 from factories.restaurante_factory import RestauranteFactory
 from factories.avaliacao_factory import AvaliacaoFactory
 
-from database import criar_conexao, criar_tabelas, get_connection, fechar_conexao
+from database import DatabaseManager
 
 console = Console()
 
-conn = criar_conexao()
-cursor = conn.cursor()
-cursor.execute("DROP TABLE IF EXISTS restaurantes;")
-cursor.execute("DROP TABLE IF EXISTS avaliacoes;")
-cursor.execute("DROP TABLE IF EXISTS pratos;")
-cursor.execute("DROP TABLE IF EXISTS bebidas;")
-criar_tabelas(conn)
-conn.commit()
+db = DatabaseManager()
+db.conectar()
+db.drop_tabelas()
+db.criar_tabelas()
     
 # # Tabela para os pratos
 # prato_table = Table(title="Pratos Disponíveis", style="green")
@@ -85,7 +81,7 @@ for _ in range(10):
     
     response = requests.post(url, json=dados_restaurante)
     
-    if response.status_code != 200:
+    if response.status_code != 201:
         console.print(f"[red]Falha ao criar restaurante: {response.status_code}")
         
     restaurante_table.add_row(
@@ -93,7 +89,7 @@ for _ in range(10):
         response.json().get("nome"),
         response.json().get("categoria"),
         "✅ Sim" if response.json().get("ativo") else "❌ Não",
-        "💾 Salvo" if response.status_code == 200 else "❌ Erro",
+        "💾 Salvo" if response.status_code == 201 else "❌ Erro",
     )
 console.print(restaurante_table)
 
@@ -119,7 +115,7 @@ for i in range(30):
 
         response = requests.post(url, json=dados_avaliacao)
         
-        if response.status_code != 200:
+        if response.status_code != 201:
             console.print(f"[red]Falha ao criar restaurante: {response.status_code}")
 
         estrelas = "⭐" * avaliacao.nota
@@ -127,7 +123,7 @@ for i in range(30):
             avaliacao.cliente,
             f"{avaliacao.nota} {estrelas}",
             str(i + 1),
-            "💾 Salvo" if response.status_code == 200 else "❌ Erro",
+            "💾 Salvo" if response.status_code == 201 else "❌ Erro",
         )
         
     os.system("cls" if os.name == "nt" else "clear")
@@ -139,3 +135,5 @@ for i in range(30):
 
 # restaurante_personalizado = RestauranteFactory(nome="Restaurante do Chef", categoria="Brasileira")
 # console.print(f"[bold red]Restaurante Personalizado:[/bold red] {restaurante_personalizado._nome}, Categoria: [yellow]{restaurante_personalizado._categoria}[/yellow]")
+
+db.fechar_conexao()
