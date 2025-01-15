@@ -20,7 +20,7 @@ def listar_restaurantes(skip: int = 0, limit: int = 10):
     """Lista todos os restaurantes com paginação."""
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM restaurante LIMIT ? OFFSET ?", (limit, skip))
+    cursor.execute("SELECT * FROM restaurantes LIMIT ? OFFSET ?", (limit, skip))
     rows = cursor.fetchall()
     fechar_conexao(conn)
 
@@ -34,7 +34,7 @@ def buscar_restaurante(restaurante_id: int):
     """Busca um restaurante específico pelo ID."""
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM restaurante WHERE id = ?", (restaurante_id,))
+    cursor.execute("SELECT * FROM restaurantes WHERE id = ?", (restaurante_id,))
     row = cursor.fetchone()
     fechar_conexao(conn)
 
@@ -49,7 +49,7 @@ def criar_restaurante(restaurante: RestauranteCreate):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO restaurante (nome, categoria, ativo) VALUES (?, ?, ?)",
+        "INSERT INTO restaurantes (nome, categoria, ativo) VALUES (?, ?, ?)",
         (restaurante.nome, restaurante.categoria, int(restaurante.ativo))
     )
     conn.commit()
@@ -63,7 +63,7 @@ def atualizar_restaurante(restaurante_id: int, restaurante: RestauranteCreate):
     """Atualiza os dados de um restaurante."""
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM restaurante WHERE id = ?", (restaurante_id,))
+    cursor.execute("SELECT * FROM restaurantes WHERE id = ?", (restaurante_id,))
     row = cursor.fetchone()
 
     if not row:
@@ -71,7 +71,7 @@ def atualizar_restaurante(restaurante_id: int, restaurante: RestauranteCreate):
         raise HTTPException(status_code=404, detail="Restaurante não encontrado")
 
     cursor.execute(
-        "UPDATE restaurante SET nome = ?, categoria = ?, ativo = ? WHERE id = ?",
+        "UPDATE restaurantes SET nome = ?, categoria = ?, ativo = ? WHERE id = ?",
         (restaurante.nome, restaurante.categoria, int(restaurante.ativo), restaurante_id)
     )
     conn.commit()
@@ -84,14 +84,14 @@ def deletar_restaurante(restaurante_id: int):
     """Deleta um restaurante pelo ID."""
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM restaurante WHERE id = ?", (restaurante_id,))
+    cursor.execute("SELECT * FROM restaurantes WHERE id = ?", (restaurante_id,))
     row = cursor.fetchone()
 
     if not row:
         fechar_conexao(conn)
         raise HTTPException(status_code=404, detail="Restaurante não encontrado")
 
-    cursor.execute("DELETE FROM restaurante WHERE id = ?", (restaurante_id,))
+    cursor.execute("DELETE FROM restaurantes WHERE id = ?", (restaurante_id,))
     conn.commit()
     fechar_conexao(conn)
 
@@ -103,7 +103,7 @@ def criar_avaliacao(avaliacao: AvaliacaoCreate):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO avaliacao (cliente, nota, restaurante_id) VALUES (?, ?, ?)",
+        "INSERT INTO avaliacoes (cliente, nota, restaurante_id) VALUES (?, ?, ?)",
         (avaliacao.cliente, int(avaliacao.nota), int(avaliacao.id_restaurante))
     )
     conn.commit()
@@ -112,7 +112,7 @@ def criar_avaliacao(avaliacao: AvaliacaoCreate):
 
     return Avaliacao(id=avaliacao_id, **avaliacao.dict())
 
-# @app.post("/avaliacoes/", response_model=Prato)
+# @app.post("/pratos/", response_model=Prato)
 # def criar_prato(prato: PratoCreate):
 #     """Cria uma nova prato."""
 #     conn = get_connection()

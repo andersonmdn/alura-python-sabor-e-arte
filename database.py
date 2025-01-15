@@ -22,9 +22,9 @@ def get_connection():
 def criar_tabelas(conn):
     comandos_sql = [
         {
-            "tabela": "restaurante",
+            "tabela": "restaurantes",
             "query": """
-            CREATE TABLE IF NOT EXISTS restaurante (
+            CREATE TABLE IF NOT EXISTS restaurantes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
                 categoria TEXT NOT NULL,
@@ -33,9 +33,9 @@ def criar_tabelas(conn):
             """
         },
         {
-            "tabela": "avaliacao",
+            "tabela": "avaliacoes",
             "query": """
-            CREATE TABLE IF NOT EXISTS avaliacao (
+            CREATE TABLE IF NOT EXISTS avaliacoes(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 cliente TEXT NOT NULL,
                 nota INTEGER NOT NULL CHECK(nota BETWEEN 1 AND 5),
@@ -45,36 +45,30 @@ def criar_tabelas(conn):
             """
         },
         {
-            "tabela": "item_cardapio",
+            "tabela": "pratos",
             "query": """
-            CREATE TABLE IF NOT EXISTS item_cardapio (
+            CREATE TABLE IF NOT EXISTS pratos (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
                 preco REAL NOT NULL,
                 disponibilidade BOOLEAN DEFAULT 1,
-                tipo TEXT NOT NULL CHECK(tipo IN ('prato', 'bebida')),
+                descricao TEXT NOT NULL,
                 restaurante_id INTEGER NOT NULL,
                 FOREIGN KEY (restaurante_id) REFERENCES restaurante(id) ON DELETE CASCADE
             );
             """
         },
         {
-            "tabela": "prato",
+            "tabela": "bebidas",
             "query": """
-            CREATE TABLE IF NOT EXISTS prato (
-                id INTEGER PRIMARY KEY,
-                descricao TEXT NOT NULL,
-                FOREIGN KEY (id) REFERENCES item_cardapio(id) ON DELETE CASCADE
-            );
-            """
-        },
-        {
-            "tabela": "bebida",
-            "query": """
-            CREATE TABLE IF NOT EXISTS bebida (
-                id INTEGER PRIMARY KEY,
+            CREATE TABLE IF NOT EXISTS bebidas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                preco REAL NOT NULL,
+                disponibilidade BOOLEAN DEFAULT 1,
                 tamanho TEXT NOT NULL,
-                FOREIGN KEY (id) REFERENCES item_cardapio(id) ON DELETE CASCADE
+                restaurante_id INTEGER NOT NULL,
+                FOREIGN KEY (restaurante_id) REFERENCES restaurante(id) ON DELETE CASCADE
             );
             """
         }
