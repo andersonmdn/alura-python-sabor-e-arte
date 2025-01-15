@@ -98,7 +98,7 @@ Adiciona uma lista de restaurantes de exemplo com avaliações para facilitar os
 
 .\venv\Scripts\activate.bat
 
-uvicorn main:app
+uvicorn main:app --reload
 
 http://127.0.0.1:8000/docs
 

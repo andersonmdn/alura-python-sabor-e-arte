@@ -7,12 +7,22 @@ from rich.console import Console
 from rich.table import Table
 # from factories.prato_factory import PratoFactory
 # from factories.bebida_factory import BebidaFactory
-# from factories.restaurante_factory import RestauranteFactory
+from factories.restaurante_factory import RestauranteFactory
 from factories.avaliacao_factory import AvaliacaoFactory
 
-# Inicializando o console Rich
+from database import criar_conexao, criar_tabelas, get_connection, fechar_conexao
+
 console = Console()
 
+conn = criar_conexao()
+cursor = conn.cursor()
+cursor.execute("DROP TABLE IF EXISTS restaurantes;")
+cursor.execute("DROP TABLE IF EXISTS avaliacoes;")
+cursor.execute("DROP TABLE IF EXISTS pratos;")
+cursor.execute("DROP TABLE IF EXISTS bebidas;")
+criar_tabelas(conn)
+conn.commit()
+    
 # # Tabela para os pratos
 # prato_table = Table(title="Pratos Disponíveis", style="green")
 # prato_table.add_column("Nome", style="bold cyan", justify="left")
@@ -55,37 +65,37 @@ console = Console()
 # # Tabela para restaurantes
 
 url = "http://127.0.0.1:8000/restaurantes/"
-# restaurante_table = Table(title="Restaurantes", style="red")
-# restaurante_table.add_column("Id", justify="left")
-# restaurante_table.add_column("Nome", justify="left")
-# restaurante_table.add_column("Categoria", justify="left")
-# restaurante_table.add_column("Ativo", justify="center")
-# restaurante_table.add_column("Banco de Dados", justify="center")
+restaurante_table = Table(title="Restaurantes", style="red")
+restaurante_table.add_column("Id", justify="left")
+restaurante_table.add_column("Nome", justify="left")
+restaurante_table.add_column("Categoria", justify="left")
+restaurante_table.add_column("Ativo", justify="center")
+restaurante_table.add_column("Banco de Dados", justify="center")
 
-# for _ in range(10):
-#     restaurante = RestauranteFactory()
-#     if random.randint(0, 1) == 1:
-#         restaurante.alternar_status()
+for _ in range(10):
+    restaurante = RestauranteFactory()
+    if random.randint(0, 1) == 1:
+        restaurante.alternar_status()
         
-#     dados_restaurante = {
-#         "nome": restaurante.nome,
-#         "categoria": restaurante.categoria,
-#         "ativo": True if restaurante.ativo == "Ativo" else False
-#     }
+    dados_restaurante = {
+        "nome": restaurante.nome,
+        "categoria": restaurante.categoria,
+        "ativo": True if restaurante.ativo == "Ativo" else False
+    }
     
-#     response = requests.post(url, json=dados_restaurante)
+    response = requests.post(url, json=dados_restaurante)
     
-#     if response.status_code != 200:
-#         console.print(f"[red]Falha ao criar restaurante: {response.status_code}")
+    if response.status_code != 200:
+        console.print(f"[red]Falha ao criar restaurante: {response.status_code}")
         
-#     restaurante_table.add_row(
-#         str(response.json().get("id")),
-#         response.json().get("nome"),
-#         response.json().get("categoria"),
-#         "✅ Sim" if response.json().get("ativo") else "❌ Não",
-#         "💾 Salvo" if response.status_code == 200 else "❌ Erro",
-#     )
-# console.print(restaurante_table)
+    restaurante_table.add_row(
+        str(response.json().get("id")),
+        response.json().get("nome"),
+        response.json().get("categoria"),
+        "✅ Sim" if response.json().get("ativo") else "❌ Não",
+        "💾 Salvo" if response.status_code == 200 else "❌ Erro",
+    )
+console.print(restaurante_table)
 
 # Tabela para avaliações
 
